@@ -1,11 +1,13 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { MoodPicker } from "../components/MoodPicker";
+import { useAppContext } from "./App.provider";
 
 export const Home: React.FC = () => {
+  const { handleSelectMood } = useAppContext();
   return (
     <View style={styles.container}>
-      <MoodPicker />
+      <MoodPicker handleSelectMood={handleSelectMood} />
     </View>
   );
 };

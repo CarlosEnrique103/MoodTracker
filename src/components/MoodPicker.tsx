@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import { MoodOptionType } from "../types";
 import { theme } from "../theme";
@@ -11,8 +11,17 @@ const moodOptions: MoodOptionType[] = [
   { emoji: "😤", description: "frustrated" },
 ];
 
-export const MoodPicker: React.FC = () => {
+type MoodPickerProps = {
+  handleSelectMood: (mood: MoodOptionType) => void;
+};
+export const MoodPicker: React.FC<MoodPickerProps> = ({ handleSelectMood }) => {
   const [selectMood, setSelectMood] = useState<MoodOptionType>();
+  const handleSelect = useCallback(() => {
+    if (selectMood) {
+      handleSelectMood(selectMood);
+      setSelectMood(undefined);
+    }
+  }, [selectMood, handleSelectMood]);
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>How are you right now?</Text>
@@ -40,7 +49,7 @@ export const MoodPicker: React.FC = () => {
       </View>
 
       <View>
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={handleSelect}>
           <Text style={styles.buttonText}>Choose</Text>
         </Pressable>
       </View>
@@ -54,8 +63,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   moodItem: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 30,
