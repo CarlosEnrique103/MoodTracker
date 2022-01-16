@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Image, Pressable, View, Text, StyleSheet } from "react-native";
 import { MoodOptionType } from "../types";
 import { theme } from "../theme";
 
@@ -16,12 +16,29 @@ type MoodPickerProps = {
 };
 export const MoodPicker: React.FC<MoodPickerProps> = ({ handleSelectMood }) => {
   const [selectMood, setSelectMood] = useState<MoodOptionType>();
+  const [hasChoose, setHasChoose] = useState(false);
   const handleSelect = useCallback(() => {
     if (selectMood) {
       handleSelectMood(selectMood);
       setSelectMood(undefined);
+      setHasChoose(true);
     }
   }, [selectMood, handleSelectMood]);
+
+  if (hasChoose) {
+    return (
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/butterfly.png")}
+          style={styles.image}
+        />
+        <Pressable style={styles.button} onPress={() => setHasChoose(false)}>
+          <Text style={styles.buttonText}>Choose Again!</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>How are you right now?</Text>
@@ -47,7 +64,6 @@ export const MoodPicker: React.FC<MoodPickerProps> = ({ handleSelectMood }) => {
           </View>
         ))}
       </View>
-
       <View>
         <Pressable style={styles.button} onPress={handleSelect}>
           <Text style={styles.buttonText}>Choose</Text>
@@ -88,6 +104,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     paddingVertical: 10,
+    backgroundColor: "rgba(0,0,0,0.15)",
   },
   heading: {
     fontSize: 20,
@@ -95,6 +112,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textAlign: "center",
     marginBottom: 20,
+    color: theme.colorWhite,
   },
   button: {
     backgroundColor: theme.colorPurple,
@@ -108,5 +126,8 @@ const styles = StyleSheet.create({
     color: theme.colorWhite,
     textAlign: "center",
     fontWeight: "bold",
+  },
+  image: {
+    alignSelf: "center",
   },
 });
